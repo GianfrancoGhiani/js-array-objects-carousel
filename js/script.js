@@ -146,10 +146,8 @@ function switchToPrev(){
             active.classList.replace('d-block', 'd-none');
             if (index == 0){
                 const cards = document.querySelectorAll('.card');
-                const lastElemCard = cards[cards.length-1];
+                const lastElemCard = cards[cards.length - 1];
                 lastElemCard.classList.replace('d-none', 'd-block');
-
-               
             } else {
                 active.previousSibling.classList.replace('d-none', 'd-block');
             }
@@ -171,17 +169,22 @@ function switchToPrev(){
 }
 
 
-
-
+const autoplay = setInterval(switchToNext, 3000);
 prevArrow.addEventListener('click',switchToPrev)
 nextArrow.addEventListener('click',switchToNext)
 
 const Stop = document.getElementById('stop');
 const start = document.getElementById('start');
 
-const reverse = document.getElementById('reverse');
+
 
 Stop.addEventListener('click', ()=>{
-    clearInterval(timer);
+    let timer;
+    clearInterval(autoplay);
+    start.addEventListener('click', ()=>{
+        timer = setInterval(switchToNext, 3000);
+        Stop.addEventListener('click', ()=>{clearInterval(timer);})
+    })
+    
 })
-let timer = setInterval(switchToNext, 3000);
+
