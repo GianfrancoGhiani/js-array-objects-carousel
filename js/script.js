@@ -69,3 +69,59 @@ const images = [
         description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et temporibus voluptatum suscipit tempore aliquid deleniti aut veniam.'
     },
 ];
+const imagesRef = images.map((element)=>{
+    return element.url
+})
+console.log(imagesRef)
+
+
+const bigContainer = document.getElementById('bigView');
+const listContainer = document.getElementById('imgList');
+
+
+for (let place of images){
+    const card = document.createElement('img');
+    card.setAttribute('src', `${place.url}`);
+    card.setAttribute('style', `max-width:100%`);
+    card.className = 'card d-none';
+    bigContainer.append(card);
+    const detail = document.createElement('div');
+    detail.className = 'card-txt d-none';
+    detail.innerHTML= `<h4>${place.title}</h4>
+    <p>${place.description}</p>`;
+    bigContainer.append(detail);
+    
+
+}
+for (let img of imagesRef){
+    const littleCard = document.createElement('img');
+    littleCard.setAttribute('src', `${img}`);
+    littleCard.setAttribute('style', `max-width:100%`);
+    littleCard.className = 'listEl col p-1 rounded-2 opacity-50 ';
+    listContainer.append(littleCard);
+
+}
+
+
+const frsCard = document.querySelector('.card');
+frsCard.classList.replace('d-none', 'd-block');
+const frsCardText = document.querySelector('.card-txt');
+frsCardText.classList.replace('d-none', 'd-block');
+const frsElList = document.querySelector('.listEl');
+frsElList.classList.replace('opacity-50', 'opacity-100');
+
+
+const arrows = document.querySelectorAll('i');
+const precArrow = arrows[0];
+const nextArrow = arrows[1];
+console.log(precArrow, nextArrow)
+
+// function switchToNext (index){
+
+
+
+
+// }
+// images.forEach(place, index){
+//     setInterval(switchToNext(index), 1000);
+// }
