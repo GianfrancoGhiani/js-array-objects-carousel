@@ -169,10 +169,19 @@ function switchToPrev(){
 
 
 }
+
+
+
+
 prevArrow.addEventListener('click',switchToPrev)
 nextArrow.addEventListener('click',switchToNext)
-/*
-se la card ad index=i 
-    d-block replace con d-none
-    card a index=i+1 d-none in d-block
-*/
+
+const Stop = document.getElementById('stop');
+const start = document.getElementById('start');
+
+const reverse = document.getElementById('reverse');
+
+Stop.addEventListener('click', ()=>{
+    clearInterval(timer);
+})
+let timer = setInterval(switchToNext, 3000);
