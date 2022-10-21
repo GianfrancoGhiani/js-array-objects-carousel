@@ -74,8 +74,9 @@ const images = [
 const bigContainer = document.getElementById('bigView');
 const listContainer = document.getElementById('imgList');
 
-
+// creazione carte per ogni oggetto nella lista di immagini
 for (let place of images){
+    //immagini grandi
     const card = document.createElement('div');
     card.className = 'card d-none';
     bigContainer.append(card);
@@ -88,7 +89,7 @@ for (let place of images){
     detail.innerHTML= `<h4>${place.title}</h4>
     <p>${place.description}</p>`;
     card.append(detail);
-    
+    //immagini piccole    
     const littleCard = document.createElement('img');
     littleCard.setAttribute('src', `${place.url}`);
     littleCard.setAttribute('style', `max-width:100%`);
@@ -96,34 +97,45 @@ for (let place of images){
     listContainer.append(littleCard);
 }
 
-
+//do visibilità ai primi elementi
 const frsCard = document.querySelector('.card');
 frsCard.classList.replace('d-none', 'd-block');
 const frsElList = document.querySelector('.listEl');
 frsElList.classList.replace('opacity-50', 'opacity-100');
 
-
+// prendo le freccette
 const arrows = document.querySelectorAll('i');
 const prevArrow = arrows[0];
 const nextArrow = arrows[1];
 
+
+//creo funzione che mi permette di avanzare lungo l'array di immagini delle località
 function switchToNext(){
+    //identifico il blocco in visualizzazione
     const active = document.querySelector('.d-block')
     const activeImg = active.querySelector('img');
     const actListElem = document.querySelector('.opacity-100');
     images.forEach((place, index)=>{
+        //estrapolo l'attributo src e verifico che sia uguale ad uno degli url in database
         if (activeImg.getAttribute('src') == images[index].url){
             active.classList.replace('d-block', 'd-none');
+            // identificato il blocco passo a dare visibilità al prossimo blocco
+            //se non presente (ultimo elemento)
             if (!active.nextSibling){
+                //prendo il primo blocco e rinizia il ciclo
                 const frsCard = document.querySelector('.card');
                 frsCard.classList.replace('d-none', 'd-block');
             } else {
                 active.nextSibling.classList.replace('d-none', 'd-block');
             }
         }
+        // prendo lelementino della lista con lo stesso valore di attributo src
         if (actListElem.getAttribute('src') == activeImg.getAttribute('src')){
+            // gli tolgo visibilità e la do al suo successivo
             actListElem.classList.replace('opacity-100', 'opacity-50');
+            //se non presente (ultimo elemento)
             if (!active.nextSibling){
+                //prendo il primo blocco e rinizia il ciclo
                 const frsElList = document.querySelector('#imgList img');
                 frsElList.classList.replace('opacity-50', 'opacity-100');
             } else {
@@ -136,15 +148,22 @@ function switchToNext(){
 
 
 }
+
+//creo funzione che mi permette di retrocedere lungo l'array di immagini delle località
 function switchToPrev(){
+    //identifico il blocco in visualizzazione
     const active = document.querySelector('.d-block')
     const activeImg = active.querySelector('img');
     const actListElem = document.querySelector('.opacity-100');
 
     images.forEach((place, index)=>{
+        //estrapolo l'attributo src e verifico che sia uguale ad uno degli url in database
         if (activeImg.getAttribute('src') == images[index].url){
             active.classList.replace('d-block', 'd-none');
+            // identificato il blocco passo a dare visibilità al precedente
+            //se non presente (primo elemento)
             if (index == 0){
+                //prendo l'ultimo blocco e rinizia il ciclo
                 const cards = document.querySelectorAll('.card');
                 const lastElemCard = cards[cards.length - 1];
                 lastElemCard.classList.replace('d-none', 'd-block');
@@ -152,9 +171,13 @@ function switchToPrev(){
                 active.previousSibling.classList.replace('d-none', 'd-block');
             }
         }  
+        // prendo lelementino della lista con lo stesso valore di attributo src
         if (actListElem.getAttribute('src') == activeImg.getAttribute('src')){
             actListElem.classList.replace('opacity-100', 'opacity-50');
+            // gli tolgo visibilità e la do al precedente
+            //se non presente (primo elemento)
             if (!actListElem.previousSibling){
+                //prendo l'ultimo blocco e rinizia il ciclo
                 const listElCard = document.querySelectorAll('#imgList img')
                 const lastListElem = listElCard[listElCard.length-1];
                 lastListElem.classList.replace('opacity-50', 'opacity-100');
@@ -168,8 +191,20 @@ function switchToPrev(){
 
 }
 
+//imposto uno scorrimento automatico "onload" ad intervallo di 3sec "verso il successivo"
+let autoplay = setInterval(switchToNext, 3000);
 
-const autoplay = setInterval(switchToNext, 3000);
+
+// bottone inverti
+const reverse = document.getElementById('reverse');
+reverse.addEventListener('click', ()=>{
+    // pulisco lo scorrimento "verso il successivo"
+    clearInterval(autoplay);
+    //riassegno uno scorrimento ad intervallo di 3sec "verso il precedente"
+    autoplay = setInterval(switchToPrev, 3000);
+})
+
+//freccette avanti e indietro
 prevArrow.addEventListener('click',switchToPrev)
 nextArrow.addEventListener('click',switchToNext)
 
@@ -177,12 +212,15 @@ const Stop = document.getElementById('stop');
 const start = document.getElementById('start');
 
 
-
+// tasto stop
 Stop.addEventListener('click', ()=>{
     let timer;
+    //blocco qualsiasi scorrimento automatico "onload"
     clearInterval(autoplay);
+    //dopodichè posso riavviarne un altro
     start.addEventListener('click', ()=>{
         timer = setInterval(switchToNext, 3000);
+        //e bloccarlo nuovamente quando utile
         Stop.addEventListener('click', ()=>{clearInterval(timer);})
     })
     
