@@ -69,10 +69,6 @@ const images = [
         description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et temporibus voluptatum suscipit tempore aliquid deleniti aut veniam.'
     },
 ];
-const imagesRef = images.map((element)=>{
-    return element.url
-})
-console.log(imagesRef)
 
 
 const bigContainer = document.getElementById('bigView');
@@ -80,48 +76,103 @@ const listContainer = document.getElementById('imgList');
 
 
 for (let place of images){
-    const card = document.createElement('img');
-    card.setAttribute('src', `${place.url}`);
-    card.setAttribute('style', `max-width:100%`);
+    const card = document.createElement('div');
     card.className = 'card d-none';
     bigContainer.append(card);
+    const cardImg = document.createElement('img');
+    cardImg.setAttribute('src', `${place.url}`);
+    cardImg.setAttribute('style', `max-width:100%`);
+    card.append(cardImg);
     const detail = document.createElement('div');
-    detail.className = 'card-txt d-none';
+    detail.className = 'card-txt';
     detail.innerHTML= `<h4>${place.title}</h4>
     <p>${place.description}</p>`;
-    bigContainer.append(detail);
+    card.append(detail);
     
-
-}
-for (let img of imagesRef){
     const littleCard = document.createElement('img');
-    littleCard.setAttribute('src', `${img}`);
+    littleCard.setAttribute('src', `${place.url}`);
     littleCard.setAttribute('style', `max-width:100%`);
-    littleCard.className = 'listEl col p-1 rounded-2 opacity-50 ';
+    littleCard.className = 'listEl col p-1 rounded-2 opacity-50';
     listContainer.append(littleCard);
-
 }
 
 
 const frsCard = document.querySelector('.card');
 frsCard.classList.replace('d-none', 'd-block');
-const frsCardText = document.querySelector('.card-txt');
-frsCardText.classList.replace('d-none', 'd-block');
 const frsElList = document.querySelector('.listEl');
 frsElList.classList.replace('opacity-50', 'opacity-100');
 
 
 const arrows = document.querySelectorAll('i');
-const precArrow = arrows[0];
+const prevArrow = arrows[0];
 const nextArrow = arrows[1];
-console.log(precArrow, nextArrow)
 
-// function switchToNext (index){
+function switchToNext(){
+    const active = document.querySelector('.d-block')
+    const activeImg = active.querySelector('img');
+    const actListElem = document.querySelector('.opacity-100');
+    images.forEach((place, index)=>{
+        if (activeImg.getAttribute('src') == images[index].url){
+            active.classList.replace('d-block', 'd-none');
+            if (!active.nextSibling){
+                const frsCard = document.querySelector('.card');
+                frsCard.classList.replace('d-none', 'd-block');
+            } else {
+                active.nextSibling.classList.replace('d-none', 'd-block');
+            }
+        }
+        if (actListElem.getAttribute('src') == activeImg.getAttribute('src')){
+            actListElem.classList.replace('opacity-100', 'opacity-50');
+            if (!active.nextSibling){
+                const frsElList = document.querySelector('#imgList img');
+                frsElList.classList.replace('opacity-50', 'opacity-100');
+            } else {
+                actListElem.nextSibling.classList.replace('opacity-50', 'opacity-100');
+            }
+        }
+        
+    })
 
 
 
+}
+function switchToPrev(){
+    const active = document.querySelector('.d-block')
+    const activeImg = active.querySelector('img');
+    const actListElem = document.querySelector('.opacity-100');
 
-// }
-// images.forEach(place, index){
-//     setInterval(switchToNext(index), 1000);
-// }
+    images.forEach((place, index)=>{
+        if (activeImg.getAttribute('src') == images[index].url){
+            active.classList.replace('d-block', 'd-none');
+            if (index == 0){
+                const cards = document.querySelectorAll('.card');
+                const lastElemCard = cards[cards.length-1];
+                lastElemCard.classList.replace('d-none', 'd-block');
+
+               
+            } else {
+                active.previousSibling.classList.replace('d-none', 'd-block');
+            }
+        }  
+        if (actListElem.getAttribute('src') == activeImg.getAttribute('src')){
+            actListElem.classList.replace('opacity-100', 'opacity-50');
+            if (!actListElem.previousSibling){
+                const listElCard = document.querySelectorAll('#imgList img')
+                const lastListElem = listElCard[listElCard.length-1];
+                lastListElem.classList.replace('opacity-50', 'opacity-100');
+            } else {
+                actListElem.previousSibling.classList.replace('opacity-50', 'opacity-100');
+            }
+        }
+    })
+
+
+
+}
+prevArrow.addEventListener('click',switchToPrev)
+nextArrow.addEventListener('click',switchToNext)
+/*
+se la card ad index=i 
+    d-block replace con d-none
+    card a index=i+1 d-none in d-block
+*/
